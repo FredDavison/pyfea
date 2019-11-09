@@ -9,4 +9,5 @@ VERSION = '0.1'
 
 
 setup(name=NAME,
-      version=VERSION)
+      version=VERSION,
+      install_requires=['numpy'])
