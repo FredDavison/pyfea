@@ -11,7 +11,8 @@ RHO = 7850
 class Node:
     """Finite element node"""
 
-    def __init__(self, coords):
+    def __init__(self, coords, index):
+        self.idx = index
         self.coords = np.asarray(coords)
 
 
