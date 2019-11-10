@@ -11,7 +11,7 @@ from pyfea.fea import FeModel
 from pyfea.elements import Node, Bar
 
 
-np.set_printoptions(precision=0, suppress=True)
+np.set_printoptions(precision=2, suppress=True)
 
 
 nodes = [Node([0, 0], 0),
@@ -21,6 +21,9 @@ nodes = [Node([0, 0], 0),
 node_pairs = [(nodes[0], nodes[1]),
               (nodes[1], nodes[2]),
               (nodes[0], nodes[2])]
+
+forces = [0, 0, 0, 0, 2, 1]
+displacements = [0, 0, None, 0, None, None]
 
 reference_ks = [
     [[1, 0, -1, 0],
@@ -54,9 +57,18 @@ def test_bar_global_stiffness_matrix(node_pair, reference):
     np.testing.assert_array_almost_equal(k_coefficients, reference)
 
 
-def test_global_stiffness_matrix():
+def test_global_stiffness_matrix(fe_model):
+    np.testing.assert_array_almost_equal(fe_model.k, reference_global_k)
+
+
+def test_solution(fe_model):
+    fe_model.solve()
+    np.testing.assert_array_almost_equal(fe_model.reduced_u, [0, 0.4, -0.2])
+
+
+@pytest.fixture
+def fe_model():
     elements = [Bar(*node_pair, 0) for node_pair in node_pairs]
     for element, k in zip(elements, axial_stiffnesses):
         element.axial_rigidity = k / element.length
-    fe_model = FeModel(nodes, elements)
-    np.testing.assert_array_almost_equal(fe_model.k, reference_global_k)
+    return FeModel(nodes, elements, forces, displacements)
