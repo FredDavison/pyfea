@@ -38,7 +38,7 @@ class Bar:
         Kbar = self.local_stiffness_matrix()
         T = self.transformation_matrix()
         TT = self.force_transformation_matrix()
-                      
+
         K = np.linalg.multi_dot([TT, Kbar, T])
         return K
 
