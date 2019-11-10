@@ -3,13 +3,14 @@ import numpy as np
 
 
 class FeModel:
+    """Represents the global FE model and implements solution."""
+
     def __init__(self, nodes, elements):
         self.size = len(nodes) * 2
         self.nodes = nodes
         self.elements = elements
         self.k = np.zeros((self.size, self.size))
         self.assemble_global_stiffness_matrix()
-
 
     def assemble_global_stiffness_matrix(self):
         for element in self.elements:
