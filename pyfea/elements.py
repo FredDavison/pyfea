@@ -8,14 +8,21 @@ E = 2.05e10
 RHO = 7850
 
 
+class Node:
+    """Finite element node"""
+
+    def __init__(self, coords):
+        self.coords = np.asarray(coords)
+
+
 class Bar:
     """Solid bar element"""
 
-    def __init__(self, i_coords, j_coords, diameter):
+    def __init__(self, i_node, j_node, diameter):
         self.area = pi * diameter ** 2 / 4
-        self.i_coords = np.asarray(i_coords)
-        self.j_coords = np.asarray(j_coords)
-        self.vector = self.j_coords - self.i_coords
+        self.i_node = i_node
+        self.j_node = j_node
+        self.vector = self.j_node.coords - self.i_node.coords
         self.length = np.linalg.norm(self.vector)
         self.axial_rigidity = self.area * E / self.length
         self.orientation_angle = acos(self.vector[0] / self.length)
