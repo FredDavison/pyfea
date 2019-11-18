@@ -37,3 +37,4 @@ class FeModel:
         self.reduced_k = self.k[unknown_displacement_idxs][:, unknown_displacement_idxs]
         self.reduced_f = self.forces[unknown_displacement_idxs]
         self.reduced_u = np.linalg.solve(self.reduced_k, self.reduced_f)
+        self.displacements[unknown_displacement_idxs] = self.reduced_u
