@@ -61,14 +61,23 @@ def test_global_stiffness_matrix(fe_model):
     np.testing.assert_array_almost_equal(fe_model.k, reference_global_k)
 
 
-def test_solution(fe_model):
-    fe_model.solve()
-    np.testing.assert_array_almost_equal(fe_model.reduced_u, [0, 0.4, -0.2])
+def test_reduced_displacements(solved_fe_model):
+    np.testing.assert_array_almost_equal(solved_fe_model.reduced_u, [0, 0.4, -0.2])
 
 
-@pytest.fixture
+def test_complete_displacements(solved_fe_model):
+    np.testing.assert_array_almost_equal(solved_fe_model.displacements, [0, 0, 0, 0, 0.4, -0.2])
+
+
+@pytest.fixture(scope='module')
 def fe_model():
     elements = [Bar(*node_pair, 0) for node_pair in node_pairs]
     for element, k in zip(elements, axial_stiffnesses):
         element.axial_rigidity = k / element.length
     return FeModel(nodes, elements, forces, displacements)
+
+
+@pytest.fixture(scope='module')
+def solved_fe_model(fe_model):
+    fe_model.solve()
+    return fe_model
